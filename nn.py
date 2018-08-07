@@ -88,3 +88,7 @@ class NN:
 
     def ask(self,askX):
         return self.sess.run(self.Ylogits, feed_dict={self.X: askX})
+    
+    def __del__(self):
+        self.sess.close()
+    
