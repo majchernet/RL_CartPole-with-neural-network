@@ -1,5 +1,6 @@
 import gym, collections
 import numpy as np
+import plots
 
 from nn import NN
 
@@ -20,9 +21,6 @@ env.max_episode_steps = T
 
 # All states reached during experiment
 allStates = []
-
-# Explore result table for calculate mean value
-exploreResults = [0] * 100
 
 # Calculate mean value from lastNTry  
 lastNTry = 100
@@ -125,15 +123,16 @@ def runEpisode(env, T, eve, episodeNumber, render = False):
 for e in range(1,NR):
     # Neural Network to store knowledge 
     nn = NN([4,5,2])
+
+    # Explore result table for calculate mean value
+    exploreResults = [0] * 100
    
-    mean = 0
+    mean = [0] * NE
     maxi = 0
     maxt = 0 
 
     # In one run try NE episodes
     for i in range(1,NE):
-        #rate = (sum(exploreResults[-lastNTry:])/lastNTry)*(1.0/T)
-        
         res = runEpisode(env, T, exploreRate(i), i)
         
         # remove oldest result
@@ -142,9 +141,9 @@ for e in range(1,NR):
         exploreResults.append(res['t'])
         
         # average of recent attempts
-        mean = np.mean(exploreResults)
-        if mean > maxi:
-            maxi = mean
+        mean[i] = np.mean(exploreResults)
+        if mean[i] > maxi:
+            maxi = mean[i]
 
         if res['t'] > maxt:
             maxt = res['t']                
@@ -174,8 +173,11 @@ for e in range(1,NR):
 
         # train neural network model 
         nn.train(X,Y_)
-        
+    
+    plots.plotResults(mean,e)
+    
     print ("Run {} max last 100 explore try mean {}".format(e,maxi))
 
     res = runEpisode(env, T, 0, 1, True)
     print ("Test score {}".format(res['t']))
+    del nn
