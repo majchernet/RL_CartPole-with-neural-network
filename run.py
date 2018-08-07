@@ -32,7 +32,7 @@ minimalEve = 0.01
 fixedEve = False
 
 # Discount Rate
-discountRate = 0.98
+discountRate = 0.99
 
 # Minimal update of total reward that matter 
 minimalUpdate = 0.1
@@ -59,7 +59,7 @@ def exploreRate(i):
     # calculate eve value based on recent tries results and number of episode
     rateLastNTry = 1 - (sum(exploreResults[-lastNTry:])/lastNTry)*(1.0/T)
     rateStep = 1 - i * (1/NE)
-    rate = (2*rateLastNTry + 8*rateStep) / 10
+    rate = (5*rateLastNTry + 5*rateStep) / 10
 
     return rate if rate > minimalEve else minimalEve
 
@@ -122,7 +122,7 @@ def runEpisode(env, T, eve, episodeNumber, render = False):
 """
 for e in range(1,NR):
     # Neural Network to store knowledge 
-    nn = NN([4,5,2])
+    nn = NN([4,8,2])
 
     # Explore result table for calculate mean value
     exploreResults = [0] * 100
