@@ -1,10 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from copy import deepcopy
+from time import sleep
 
 data = [[[]] * 2]
 
-def plotResults(mean,nr):
+def plotResults(mean,nr,title="Experiments reults",showPlot=False,saveToFile=""):
     
     global data
     
@@ -12,7 +13,7 @@ def plotResults(mean,nr):
     
     plt.figure(figsize=(8, 6), dpi=100)
     plt.subplot(1, 1, 1)
-    plt.title("Experiments reults")
+    plt.title(title)
     
     # Set x limits
     plt.xlim(0, 2000)
@@ -25,5 +26,12 @@ def plotResults(mean,nr):
     for line in range (1,nr+1):
         plt.plot(data[line][0],data[line][1],lw=0.5)
     
-    plt.show()
+    if saveToFile:
+        plt.savefig('{}.png'.format(saveToFile))
+    
+    if showPlot:
+        plt.show()
+        time.sleep(5)
+        plt.close()
+        
     return

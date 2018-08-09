@@ -1,10 +1,14 @@
 import gym, collections
 import numpy as np
 import plots
+from time import gmtime, strftime
 
 from nn import NN
 
 verbose = False
+
+#prefix for files names to save plots
+filePrefix = strftime("%Y%m%d-%H%M_", gmtime())
 
 # CartPole environment 
 env = gym.make('CartPole-v0')
@@ -46,9 +50,6 @@ minimalUpdate = 0.1
 """
 def exploreRate(i):
     
-    # minimal explore vs exploit rate 
-    global minimalEve, exploreResults
-    
     if fixedEve:
         return minimalEve    
  
@@ -59,8 +60,9 @@ def exploreRate(i):
     # calculate eve value based on recent tries results and number of episode
     rateLastNTry = 1 - (sum(exploreResults[-lastNTry:])/lastNTry)*(1.0/T)
     rateStep = 1 - i * (1/NE)
-    rate = (5*rateLastNTry + 5*rateStep) / 10
-
+    rate = (2*rateLastNTry + 8*rateStep) / 10
+    print (i,rate)
+    
     return rate if rate > minimalEve else minimalEve
 
 
@@ -173,11 +175,11 @@ for e in range(1,NR):
 
         # train neural network model 
         nn.train(X,Y_)
-    
-    plots.plotResults(mean,e)
+        
+    plots.plotResults(mean,e,title="{} experiments reults".format(e),showPlot=False,saveToFile="plots/{}{}".format(filePrefix,e))
     
     print ("Run {} max last 100 explore try mean {}".format(e,maxi))
 
-    res = runEpisode(env, T, 0, 1, True)
+    res = runEpisode(env, T, 0, 1, False)
     print ("Test score {}".format(res['t']))
     del nn
