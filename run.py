@@ -61,7 +61,7 @@ def exploreRate(i):
     rateLastNTry = 1 - (sum(exploreResults[-lastNTry:])/lastNTry)*(1.0/T)
     rateStep = 1 - i * (1/NE)
     rate = (2*rateLastNTry + 8*rateStep) / 10
-    print (i,rate)
+    #print (i,rate)
     
     return rate if rate > minimalEve else minimalEve
 
